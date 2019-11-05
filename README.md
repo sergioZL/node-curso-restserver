@@ -1,4 +1,4 @@
-## ## Código fuente de una aplicacion restserver en node utilizando
+## Código fuente de una aplicacion restserver en node utilizando
 
 - express
 - body-parser
