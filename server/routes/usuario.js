@@ -1,18 +1,27 @@
+// ==================================================================================
+//  En este modulo se configuran las rutas de las peticiones al RESTServer
+// ================================================================================== 
 const express = require('express'); //Sirve para recibir y contestar peticiones http
-const bcrypt = require('bcrypt');
-const _ = require('underscore');
-const Usuario = require('../models/usuario');
-
+const bcrypt = require('bcrypt'); // genera hashes de encriptacion para contraseas
+const _ = require('underscore'); // sirbe para trabajar con los datos contenidos en los objetos
+const Usuario = require('../models/usuario'); // el modelo usuario es un mapa echo con mongose que sirve para trabajar con mongoDB
+const { verificarToken, verificarAdmninRole } = require('../middlewares/autenticacion');
 
 const app = express(); //se construlle en la variable app
 
 
 /**
+ * ===================================================================================
  * Las sigientes son peticiones al servidor que funcionan de la siguiente manera
  * en el request son los tados recibidos a la hora de hacer la peticion y el response
  * es lo que se envia como respuesta al cliente que realizo la peticion
+ * ====================================================================================
  */
-app.get('/usuario', function(req, res) {
+
+// Debuelve una lista de usuarios apartir de el indice indicado el el argumento desde 
+// hasta el limite indicado en el argumento limite 
+app.get('/usuario', verificarToken, (req, res) => {
+
 
     let desde = req.query.desde || 0;
 
@@ -45,7 +54,8 @@ app.get('/usuario', function(req, res) {
 
 });
 
-app.post('/usuario', function(req, res) {
+// Almacena un nuevo usuario en la base de datos 
+app.post('/usuario', [verificarToken, verificarAdmninRole], (req, res) => {
 
     /**
      * el req.body son los parametros convertidos a un json 
@@ -78,7 +88,9 @@ app.post('/usuario', function(req, res) {
     });
 });
 
-app.put('/usuario/:id', function(req, res) {
+// Actualiza el usuario cuyo id corresponda al id dado en la url
+app.put('/usuario/:id', [verificarToken, verificarAdmninRole], function(req, res) {
+
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -101,8 +113,8 @@ app.put('/usuario/:id', function(req, res) {
     });
 
 });
-
-app.delete('/usuario/:id', function(req, res) {
+// Cambia el estado del usuario proporcionado por el id de activo a inactivo
+app.delete('/usuario/:id', [verificarToken, verificarAdmninRole], function(req, res) {
 
     let id = req.params.id;
 
