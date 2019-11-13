@@ -15,11 +15,17 @@ const mongoose = require('mongoose');
 const app = express(); //se construlle en la variable app
 const bodyParser = require('body-parser'); //sirve para recibir los parametros que han sido enviados en la peticion
 
+const path = require('path');
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json());
+
+// habilitar la carpeta public 
+
+app.use(express.static(path.resolve(__dirname, '../public')));
 
 // En archivo rutes/usuario se definen las peticiones al servidor 
 app.use(require('./routes/index'));
