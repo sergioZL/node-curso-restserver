@@ -40,7 +40,7 @@ let verificarAdmninRole = (req, res, next) => {
         return res.json({
             ok: false,
             err: {
-                message: 'No esta autorizado para crear usuarios'
+                message: 'El usuario no es administrador'
             }
         });
     }
